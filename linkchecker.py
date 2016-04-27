@@ -26,8 +26,9 @@ if args.debug:
     DEBUG = True
 else:
     DEBUG = False
-    
+
 def log(text):
+    """ in case of debugging, print the log string. lazy """
     if DEBUG:
         print(text)
 
@@ -63,21 +64,21 @@ class URLDb(object):
             return dudlink
 
         # protocol handling blah blah
-        if parent.lower().startswith( 'https:' ):
+        if parent.lower().startswith('https:'):
             proto = 'https'
-        elif parent.lower().startswith( 'http:' ):
+        elif parent.lower().startswith('http:'):
             proto = 'http'
-        elif parent.lower().startswith('ftp:' ):
+        elif parent.lower().startswith('ftp:'):
             proto = 'ftp'
-            
+
         # protocol agnostic link
         if test.startswith('//'):
-            return "{}:{}".format(proto,test)
+            return "{}:{}".format(proto, test)
         elif test.startswith('/'):
             # if it's a relative link
             if parent.endswith('/'):
                 parent = parent[:-1]
-            return '{}://{}{}'.format(proto,parent.replace('//','/').split("/")[1],test)
+            return '{}://{}{}'.format(proto, parent.replace('//','/').split("/")[1], test)
         else:
             return test
 
@@ -86,7 +87,7 @@ class URLDb(object):
         self.processed += 1
 
         log("*"*20)
-        log(Processing: {}".format(test))
+        log("Processing: {}".format(test))
 
         if test.lower().startswith("mailto:"):
             return
@@ -117,7 +118,7 @@ class URLDb(object):
                 # if it's not supposed to be used
                 content_type = tmp.headers['content-type']
                 if content_type in BAD_CONTENT_TYPES or content_type.startswith('image/'):
-                    log "Ignoring content type {}".format(tmp.headers['content-type'])
+                    log("Ignoring content type {}".format(tmp.headers['content-type']))
                     self.urls[test] = True
                     return
                 bsobject = BeautifulSoup(content, "html.parser")
@@ -138,7 +139,7 @@ class URLDb(object):
                 self.failedurls[test] = {'status_code' : tmp.status_code, 'headers' : tmp.headers}
                 self.urls[test] = True
 
-    def addurl(self, parent, newurl, type):
+    def addurl(self, parent, newurl, typename):
         """ test a URL and put it in the queue if it's fine"""
         newurl = self.fixlink(parent, newurl)
 
@@ -155,7 +156,7 @@ class URLDb(object):
         elif newurl not in self.urls:
             # add it to the queue
             self.processqueue.put(newurl)
-            log("Adding {}: {}".format(type, newurl))
+            log("Adding {}: {}".format(typename, newurl))
             self.urls[newurl] = False
 
 
