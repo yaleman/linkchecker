@@ -3,21 +3,35 @@
 """ This does link checker stuff, eat a butt if you don't like it.
 Started 2016-04-27 by jhodgkinson
 """
+
+import argparse
+from Queue import Queue
+from bs4 import BeautifulSoup
+import requests
+
 # where to start, what base URLs to trust
 STARTURLS = ["http://localhost:1313"]
 
 # content types to ignore content from
 BAD_CONTENT_TYPES = []
 
-DEBUG = False
+parser = argparse.ArgumentParser()
 
-from Queue import Queue
-from bs4 import BeautifulSoup
-import requests
+parser.add_argument("starturls", nargs='+')
+parser.add_argument("--debug", action='store_true', help="Output debugging text")
 
+args = parser.parse_args()
+
+if args.debug:
+    DEBUG = True
+else:
+    DEBUG = False
+    
 def log(text):
     if DEBUG:
         print(text)
+
+STARTURLS = args.starturls
 
 class URLDb(object):
     """ does the link database/checker thing so you don't end up checking URLs twice"""
@@ -71,16 +85,16 @@ class URLDb(object):
         """ handle a URL """
         self.processed += 1
 
-        log("*"*20)
-        log("Processing: {}".format(test))
+        #print "*"*20
+        #print "Processing: {}".format(test)
 
         if test.lower().startswith("mailto:"):
             return
         if test in self.urls and self.urls[test] == True:
-            log("Already tested, jackass")
+            #print("Already tested, jackass")
             return
         elif test in self.failedurls:
-            log("Already tested and failed, not retrying")
+            #print("Already tested and failed, not retrying")
             return
         else:
             log("Grabbing: {}".format(test))
@@ -103,7 +117,7 @@ class URLDb(object):
                 # if it's not supposed to be used
                 content_type = tmp.headers['content-type']
                 if content_type in BAD_CONTENT_TYPES or content_type.startswith('image/'):
-                    log("Ignoring content type {}".format(tmp.headers['content-type']))
+                    #print "Ignoring content type {}".format(tmp.headers['content-type'])
                     self.urls[test] = True
                     return
                 bsobject = BeautifulSoup(content, "html.parser")
@@ -141,7 +155,7 @@ class URLDb(object):
         elif newurl not in self.urls:
             # add it to the queue
             self.processqueue.put(newurl)
-            log("Adding {}: {}".format(type, newurl))
+            print("Adding {}: {}".format(type, newurl))
             self.urls[newurl] = False
 
 
