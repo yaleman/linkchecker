@@ -9,11 +9,15 @@ STARTURLS = ["http://localhost:1313"]
 # content types to ignore content from
 BAD_CONTENT_TYPES = []
 
-
+DEBUG = False
 
 from Queue import Queue
 from bs4 import BeautifulSoup
 import requests
+
+def log(text):
+    if DEBUG:
+        print(text)
 
 class URLDb(object):
     """ does the link database/checker thing so you don't end up checking URLs twice"""
@@ -67,19 +71,19 @@ class URLDb(object):
         """ handle a URL """
         self.processed += 1
 
-        #print "*"*20
-        #print "Processing: {}".format(test)
+        log("*"*20)
+        log("Processing: {}".format(test))
 
         if test.lower().startswith("mailto:"):
             return
         if test in self.urls and self.urls[test] == True:
-            #print("Already tested, jackass")
+            log("Already tested, jackass")
             return
         elif test in self.failedurls:
-            #print("Already tested and failed, not retrying")
+            log("Already tested and failed, not retrying")
             return
         else:
-            print("Grabbing: {}".format(test))
+            log("Grabbing: {}".format(test))
             # check if we're allowed to spider the URL
             dontspider = test in self.dontspider
             try:
@@ -99,7 +103,7 @@ class URLDb(object):
                 # if it's not supposed to be used
                 content_type = tmp.headers['content-type']
                 if content_type in BAD_CONTENT_TYPES or content_type.startswith('image/'):
-                    #print "Ignoring content type {}".format(tmp.headers['content-type'])
+                    log("Ignoring content type {}".format(tmp.headers['content-type']))
                     self.urls[test] = True
                     return
                 bsobject = BeautifulSoup(content, "html.parser")
@@ -137,7 +141,7 @@ class URLDb(object):
         elif newurl not in self.urls:
             # add it to the queue
             self.processqueue.put(newurl)
-            print("Adding {}: {}".format(type, newurl))
+            log("Adding {}: {}".format(type, newurl))
             self.urls[newurl] = False
 
 
