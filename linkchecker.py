@@ -50,7 +50,7 @@ class URLDb(object):
         while self.processqueue.empty() == False:
             self.process(self.processqueue.get())
         # show a list of failed urls
-        lf len(failedurls) > 0:
+        lf len(self.failedurls) > 0:
 			print "FAILED URLS ({})".format(len(self.failedurls))
 			for url in self.failedurls:
 				print url, self.failedurls[url]
