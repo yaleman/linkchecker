@@ -114,6 +114,10 @@ class URLDb(object):
                 self.failedurls[test] = {'status_code' : 504, 'headers' : ''}
                 self.urls[test] = True
                 return
+            except requests.exceptions.InvalidSchema:
+                self.failedurls[test] = {'status_code' : 'invalid_schema', 'headers' : '' }
+                self.urls[test] = True
+                return
             # if it worked, and we're allowed to spider it
             if tmp.status_code < 400 and tmp.status_code > 199 and dontspider == False:
                 # if it's not supposed to be used
