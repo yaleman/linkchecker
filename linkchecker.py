@@ -9,15 +9,13 @@ from Queue import Queue
 from bs4 import BeautifulSoup
 import requests
 
-# where to start, what base URLs to trust
-STARTURLS = ["http://localhost:1313"]
-
 # content types to ignore content from
 BAD_CONTENT_TYPES = []
 
 parser = argparse.ArgumentParser()
-
+# these are the URLs we're going to parse
 parser.add_argument("starturls", nargs='+')
+# if you want to show all the things, add --debug
 parser.add_argument("--debug", action='store_true', help="Output debugging text")
 
 args = parser.parse_args()
@@ -32,25 +30,28 @@ def log(text):
     if DEBUG:
         print(text)
 
-STARTURLS = args.starturls
-
 class URLDb(object):
     """ does the link database/checker thing so you don't end up checking URLs twice"""
 
     def __init__(self, starturls):
         """ let's get this party started, feed it a list of base urls """
+        # some basic variables
         self.starturls = starturls
-        self.processqueue = Queue()
-        self.urls = {}
         self.dontspider = []
+        self.processed = 0
+        self.urls = {}
+        self.failedurls = {}
+        
+        # build the initial queue
+        self.processqueue = Queue()
         for url in self.starturls:
             self.processqueue.put(url)
-        self.failedurls = {}
-        self.processed = 0
+        # do the processing
         while self.processqueue.empty() == False:
             self.process(self.processqueue.get())
+        # show a list of failed urls
         print "#"*20
-        print "FAILED URLS"
+        print "FAILED URLS ({})".format(len(self.failedurls))
         for url in self.failedurls:
             print url, self.failedurls[url]
 
@@ -161,4 +162,4 @@ class URLDb(object):
 
 
 if __name__ == '__main__':
-    URLDB = URLDb(STARTURLS)
+    URLDB = URLDb(args.starturls)
