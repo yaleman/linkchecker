@@ -131,7 +131,7 @@ class URLDb(object):
                     # if there's some href's
                     if 'href' in link.attrs:
                         newurl = self.fixlink(test, link.attrs['href'])
-					    if newurl != u'':
+                        if newurl != u'':
                             self.addurl(test, link.attrs['href'], 'href')
             # this means it succeeded but we're not allowed to spider it
             elif dontspider:
