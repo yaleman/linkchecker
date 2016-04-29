@@ -53,7 +53,7 @@ class URLDb(object):
         if( len(self.failedurls) > 0 ):
 			print "FAILED URLS ({})".format(len(self.failedurls))
 			for url in self.failedurls:
-				print url, self.failedurls[url]
+				print( url, self.failedurls[url] )
 		log("Processed: {} urls".format(self.processed))
 
     def fixlink(self, parent, test):
