@@ -50,12 +50,11 @@ class URLDb(object):
         while self.processqueue.empty() == False:
             self.process(self.processqueue.get())
         # show a list of failed urls
-        print "#"*20
-        print "FAILED URLS ({})".format(len(self.failedurls))
-        for url in self.failedurls:
-            print url, self.failedurls[url]
-
-        print "Processed: {} urls".format(self.processed)
+        lf len(failedurls) > 0:
+			print "FAILED URLS ({})".format(len(self.failedurls))
+			for url in self.failedurls:
+				print url, self.failedurls[url]
+		log("Processed: {} urls".format(self.processed))
 
     def fixlink(self, parent, test):
         """ takes a found link and cleans it up a bit"""
