@@ -129,9 +129,10 @@ class URLDb(object):
                         self.addurl(test, image.attrs['src'], 'image')
                 for link in bsobject.find_all('a'):
                     # if there's some href's
-                    if 'href' in link.attrs and newurl != u'':
+                    if 'href' in link.attrs:
                         newurl = self.fixlink(test, link.attrs['href'])
-                        self.addurl(test, link.attrs['href'], 'href')
+						if newurl != u'':
+                            self.addurl(test, link.attrs['href'], 'href')
             # this means it succeeded but we're not allowed to spider it
             elif dontspider:
                 self.urls[test] = True
