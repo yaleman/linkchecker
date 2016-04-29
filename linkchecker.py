@@ -51,10 +51,11 @@ class URLDb(object):
             self.process(self.processqueue.get())
         # show a list of failed urls
         if( len(self.failedurls) > 0 ):
-			print "FAILED URLS ({})".format(len(self.failedurls))
-			for url in self.failedurls:
-				print( url, self.failedurls[url] )
-		log("Processed: {} urls".format(self.processed))
+            print "FAILED URLS ({})".format(len(self.failedurls))
+            for url in self.failedurls:
+                print( url, self.failedurls[url] )
+            log("Processed: {} urls".format(self.processed))
+		
 
     def fixlink(self, parent, test):
         """ takes a found link and cleans it up a bit"""
