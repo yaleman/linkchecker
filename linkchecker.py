@@ -4,13 +4,28 @@
 Started 2016-04-27 by jhodgkinson
 """
 
-import argparse
-from Queue import Queue
-from bs4 import BeautifulSoup
-import requests
-
 # content types to ignore content from
-BAD_CONTENT_TYPES = []
+BAD_CONTENT_TYPES = [ 'image/jpeg', 'image/gif' ]
+# ignore hrefs starting with these things
+BAD_SCHEMAS = [ s.lower for s in [ 'irc://', 'mailto:', '#', 'ftp://' ] ]
+
+
+# imports!
+
+import argparse, sys
+from Queue import Queue
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    print("Please install BeautifulSoup, package missing.")
+    print("https://www.crummy.com/software/BeautifulSoup/")
+    sys.exit()
+try:
+    import requests
+except ImportError:
+    print("Please install requests, package missing.")
+    print("http://docs.python-requests.org/en/master/")
+    sys.exit()
 
 parser = argparse.ArgumentParser()
 # these are the URLs we're going to parse
@@ -59,10 +74,11 @@ class URLDb(object):
 
     def fixlink(self, parent, test):
         """ takes a found link and cleans it up a bit"""
-        dudlink = u''
-        # kill anchor refs and mailtos
-        if test.lower().startswith("mailto:") or test.lower().startswith('#'):
-            return dudlink
+        # kill things we don't care about.
+        for schema in BAD_SCHEMAS:
+            # it's worth doing the lower just in case
+            if test.lower.startswith( schema ):
+                return u''
 
         # protocol handling blah blah
         if parent.lower().startswith('https:'):
