@@ -77,7 +77,7 @@ class URLDb(object):
         # kill things we don't care about.
         for schema in BAD_SCHEMAS:
             # it's worth doing the lower just in case
-            if test.lower.startswith( schema ):
+            if test.lower().startswith( schema ):
                 return u''
 
         # protocol handling blah blah
