@@ -83,6 +83,10 @@ class URLDb(object):
         if '#' in test:
             test = "".join(test.split("#")[:-1])
 
+        # remove trailing slashes
+        if test.endswith("/"):
+            test = test[:-1]
+
         # protocol handling blah blah
         if parent.lower().startswith('https:'):
             proto = 'https'
