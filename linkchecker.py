@@ -81,7 +81,7 @@ class URLDb(object):
                 return u''
         # remove anchor references
         if '#' in test:
-            test = test.split("#")[:-1]
+            test = "".join(test.split("#")[:-1])
 
         # protocol handling blah blah
         if parent.lower().startswith('https:'):
