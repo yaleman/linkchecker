@@ -75,9 +75,9 @@ class URLDb(object):
     def fixlink(self, parent, test):
         """ takes a found link and cleans it up a bit"""
         # kill things we don't care about.
-        for schema in BAD_SCHEMAS:
+        for badschema in BAD_SCHEMAS:
             # it's worth doing the lower just in case
-            if test.lower().startswith( schema ):
+            if test.lower().startswith( badschema ):
                 return u''
 
         # protocol handling blah blah
