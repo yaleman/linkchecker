@@ -7,7 +7,7 @@ Started 2016-04-27 by jhodgkinson
 # content types to ignore content from
 BAD_CONTENT_TYPES = [ 'image/jpeg', 'image/gif' ]
 # ignore hrefs starting with these things
-BAD_SCHEMAS = [ s.lower for s in [ 'irc://', 'mailto:', '#', 'ftp://' ] ]
+BAD_SCHEMAS = [ s.lower() for s in [ 'irc://', 'mailto:', '#', 'ftp://' ] ]
 
 
 # imports!
