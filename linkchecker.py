@@ -79,6 +79,8 @@ class URLDb(object):
             # it's worth doing the lower just in case
             if test.lower().startswith( badschema ):
                 return u''
+        # remove anchor references
+        test = test.split("#")[:-1]
 
         # protocol handling blah blah
         if parent.lower().startswith('https:'):
