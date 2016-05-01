@@ -6,6 +6,7 @@ Started 2016-04-27 by jhodgkinson
 
 # content types to ignore content from
 BAD_CONTENT_TYPES = [ 'image/jpeg', 'image/gif' ]
+BAD_CONTENT_TYPE_ROOTS = ['application/', 'image/' ]
 # ignore hrefs starting with these things
 BAD_SCHEMAS = [ s.lower() for s in [ 'irc://', 'mailto:', '#', 'ftp://' ] ]
 
@@ -145,6 +146,13 @@ class URLDb(object):
             if tmp.status_code < 400 and tmp.status_code > 199 and dontspider == False:
                 # if it's not supposed to be used
                 content_type = tmp.headers['content-type']
+                # kill things with known bad content-type-roots
+                for ctr in BAD_CONTENT_TYPE_ROOTS:
+                    if content_type.lower().startswith( ctr.lower() ):
+                        log("Ignoring content type {}".format(tmp.headers['content-type']))
+                        self.urls[test] = True
+                        return
+                        
                 if content_type in BAD_CONTENT_TYPES or content_type.startswith('image/'):
                     log("Ignoring content type {}".format(tmp.headers['content-type']))
                     self.urls[test] = True
