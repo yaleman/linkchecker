@@ -157,9 +157,7 @@ class URLDb(object):
                 for link in bsobject.find_all('a'):
                     # if there's some href's
                     if 'href' in link.attrs:
-                        newurl = self.fixlink(test, link.attrs['href'])
-                        if newurl != u'':
-                            self.addurl(test, link.attrs['href'], 'href')
+                        self.addurl(test, link.attrs['href'], 'href')
             # this means it succeeded but we're not allowed to spider it
             elif dontspider:
                 self.urls[test] = True
@@ -171,6 +169,8 @@ class URLDb(object):
     def addurl(self, parent, newurl, typename):
         """ test a URL and put it in the queue if it's fine"""
         newurl = self.fixlink(parent, newurl)
+        if newurl == u'':
+            return False
 
         # if it's in the base site, spider it, if not just check for 404's and stuff
         canspider = False
