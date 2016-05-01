@@ -146,17 +146,11 @@ class URLDb(object):
             if tmp.status_code < 400 and tmp.status_code > 199 and dontspider == False:
                 # if it's not supposed to be used
                 content_type = tmp.headers['content-type']
-                # kill things with known bad content-type-roots
-                for ctr in BAD_CONTENT_TYPE_ROOTS:
-                    if content_type.lower().startswith( ctr.lower() ):
-                        log("Ignoring content type {}".format(tmp.headers['content-type']))
-                        self.urls[test] = True
-                        return
-                        
-                if content_type in BAD_CONTENT_TYPES or content_type.startswith('image/'):
+                if content_type.lower().startswith( "text/" ) == False:
                     log("Ignoring content type {}".format(tmp.headers['content-type']))
                     self.urls[test] = True
                     return
+
                 bsobject = BeautifulSoup(content, "html.parser")
                 # find all the URLs
                 for image in bsobject.find_all('img'):
